@@ -15,7 +15,13 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: ru.vyarus:generics-resolver:2.0.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: junit:junit:4.12" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: ru.vyarus:generics-resolver:2.0.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: junit:junit:4.12" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: ru.vyarus:generics-resolver:2.0.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.12" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
   </component>
 </module>
