@@ -26,6 +26,9 @@ package su.izotov.java.ddispatch.master.faces;
 import su.izotov.java.ddispatch.ExpectedResult;
 import su.izotov.java.ddispatch.RestrictionInterface;
 import su.izotov.java.ddispatch.guest.faces.InInterfaceGuest;
+import su.izotov.java.ddispatch.guest.faces.InheritedParamInterface;
+import su.izotov.java.ddispatch.guest.faces.MultiMethodParamInterface;
+import su.izotov.java.ddispatch.guest.faces.SecondMultiMethodParamInterface;
 
 /**
  * one of interfaces, implemented by Master class
@@ -36,5 +39,17 @@ public interface FirstLevelInterface
     extends SecondLevelInterface {
   @Override default RestrictionInterface example(final InInterfaceGuest iif) {
     return new ExpectedResult("InInterface method");
+  }
+
+  default RestrictionInterface example(final MultiMethodParamInterface multi) {
+    return new ExpectedResult("MultiMethodParamInterface second method");
+  }
+
+  default RestrictionInterface example(final SecondMultiMethodParamInterface multi) {
+    return new ExpectedResult("SecondMultiMethodParamInterface second method");
+  }
+
+  default RestrictionInterface example(final InheritedParamInterface direct) {
+    return new ExpectedResult("FirstLevelInterface method");
   }
 }

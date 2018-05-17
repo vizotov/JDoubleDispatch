@@ -25,10 +25,15 @@ package su.izotov.java.ddispatch;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.function.BiFunction;
 import ru.vyarus.java.generics.resolver.GenericsResolver;
 import ru.vyarus.java.generics.resolver.context.GenericsContext;
+import su.izotov.java.ddispatch.methods.MethodAmbiguouslyDefinedException;
+import su.izotov.java.ddispatch.methods.MethodRepresentation;
+import su.izotov.java.ddispatch.methods.OneMethod;
+import su.izotov.java.ddispatch.methods.OneOfTwoMethods;
 
 /**
  * Double dispatch capability for method call.
@@ -62,7 +67,7 @@ public class Dispatch<M, G, R> {
    * returns it's result, otherwise calls the default method and returns it`s result
    */
   public final R invoke()
-      throws InvocationTargetException, IllegalAccessException {
+      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
     final Class<?> masterClass = this.master.getClass();
     final Class<?> guestClass = this.guest.getClass();
     final GenericsContext context = GenericsResolver.resolve(this.getClass()).type(Dispatch.class);
@@ -75,21 +80,27 @@ public class Dispatch<M, G, R> {
                                                      this.methodName,
                                                      returnClass,
                                                      new ByParameterInterfaces(masterClass,
-                                                                                guestClass,
-                                                                                this.methodName,
-                                                                                returnClass,
-                                                                                new ByParameterSuperClass(
-                                                                                    masterClass,
-                                                                                    guestClass,
-                                                                                    this.methodName,
-                                                                                    returnClass,
-                                                                                    new EmptyMethods())))
+                                                                               guestClass,
+                                                                               this.methodName,
+                                                                               returnClass,
+                                                                               new ByParameterSuperClass(
+                                                                                   masterClass,
+                                                                                   guestClass,
+                                                                                   this.methodName,
+                                                                                   returnClass,
+                                                                                   new EmptyMethods())))
         .findMethods();
     if (methods.isEmpty()) {
       ret = this.defaultMethod.apply(this.master, this.guest);
     } else {
+      final Iterator<Method> iterator = methods.iterator();
+      MethodRepresentation currentMethod = new OneMethod(iterator.next());
+      while (iterator.hasNext()) {
+        final MethodRepresentation nextMethod = new OneMethod(iterator.next());
+        currentMethod = new OneOfTwoMethods(currentMethod, nextMethod);
+      }
       //noinspection unchecked
-      ret = (R) methods.iterator().next().invoke(this.master, this.guest);
+      ret = (R) currentMethod.toMethod().invoke(this.master, this.guest);
     }
     return ret;
   }

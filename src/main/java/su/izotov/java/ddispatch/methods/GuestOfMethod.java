@@ -21,38 +21,48 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
+package su.izotov.java.ddispatch.methods;
 
-/*
- * To change this license header, toMethod License Headers in Project Properties.
- * To change this template file, toMethod Tools | Templates
- * and open the template in the editor.
- */
-package su.izotov.java.ddispatch.master;
-
-import su.izotov.java.ddispatch.ExpectedResult;
-import su.izotov.java.ddispatch.RestrictionInterface;
-import su.izotov.java.ddispatch.guest.faces.DirectParameter;
-import su.izotov.java.ddispatch.guest.faces.InheritedParamInterface;
-import su.izotov.java.ddispatch.guest.faces.Outer;
-import su.izotov.java.ddispatch.master.faces.ZeroLevelInterface;
+import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
- * the master class for testing double dispatch
+ * The type of Guest object of method
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
+ * @version $Id$
+ * @since 1.0
  */
-public class Master
-    extends SuperMaster
-    implements ZeroLevelInterface, RestrictionInterface {
-  @Override public final RestrictionInterface example(final DirectParameter direct) {
-    return new ExpectedResult("Direct method");
+class GuestOfMethod
+    implements TypeRepresentation {
+  private final Method method;
+
+  GuestOfMethod(final Method method) {
+    this.method = method;
   }
 
-  @Override public final RestrictionInterface example(final InheritedParamInterface direct) {
-    return new ExpectedResult("Master inherited method");
+  @Override public final boolean isSubtypeOf(final TypeRepresentation typeRepresentation)
+      throws MethodAmbiguouslyDefinedException {
+    return typeRepresentation.isSupertypeOf(this.toClass());
   }
 
-  @Override public final Object example(final Outer outer) {
-    return new Object();
+  @Override public final Class<?> toClass() {
+    return this.method.getParameterTypes()[0];
+  }
+
+  @Override public final int hashCode() {
+    return Objects.hash(this.method);
+  }
+
+  @SuppressWarnings("MethodWithMultipleReturnPoints") @Override
+  public final boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || this.getClass() != obj.getClass()) {
+      return false;
+    }
+    final GuestOfMethod thatObject = (GuestOfMethod) obj;
+    return Objects.equals(this.method, thatObject.method);
   }
 }

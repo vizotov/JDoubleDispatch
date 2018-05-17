@@ -21,38 +21,31 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
+package su.izotov.java.ddispatch.methods;
 
-/*
- * To change this license header, toMethod License Headers in Project Properties.
- * To change this template file, toMethod Tools | Templates
- * and open the template in the editor.
- */
-package su.izotov.java.ddispatch.master;
-
-import su.izotov.java.ddispatch.ExpectedResult;
-import su.izotov.java.ddispatch.RestrictionInterface;
-import su.izotov.java.ddispatch.guest.faces.DirectParameter;
-import su.izotov.java.ddispatch.guest.faces.InheritedParamInterface;
-import su.izotov.java.ddispatch.guest.faces.Outer;
-import su.izotov.java.ddispatch.master.faces.ZeroLevelInterface;
+import java.lang.reflect.Method;
 
 /**
- * the master class for testing double dispatch
+ * There is more than firstMethod method found, and they does not override each other
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
+ * @version $Id$
+ * @since 1.0
  */
-public class Master
-    extends SuperMaster
-    implements ZeroLevelInterface, RestrictionInterface {
-  @Override public final RestrictionInterface example(final DirectParameter direct) {
-    return new ExpectedResult("Direct method");
+public class MethodAmbiguouslyDefinedException
+    extends Exception {
+  private final Method firstMethod;
+  private final Method secondMethod;
+
+  public MethodAmbiguouslyDefinedException(
+      final Method firstMethod, final Method secondMethod) {
+    super();
+    this.firstMethod = firstMethod;
+    this.secondMethod = secondMethod;
   }
 
-  @Override public final RestrictionInterface example(final InheritedParamInterface direct) {
-    return new ExpectedResult("Master inherited method");
-  }
-
-  @Override public final Object example(final Outer outer) {
-    return new Object();
+  @Override public final String getMessage() {
+    final String message = super.getMessage();
+    return String.format("Ambiguity is found! %s and %s", this.firstMethod, this.secondMethod);
   }
 }

@@ -21,38 +21,30 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-
-/*
- * To change this license header, toMethod License Headers in Project Properties.
- * To change this template file, toMethod Tools | Templates
- * and open the template in the editor.
- */
-package su.izotov.java.ddispatch.master;
-
-import su.izotov.java.ddispatch.ExpectedResult;
-import su.izotov.java.ddispatch.RestrictionInterface;
-import su.izotov.java.ddispatch.guest.faces.DirectParameter;
-import su.izotov.java.ddispatch.guest.faces.InheritedParamInterface;
-import su.izotov.java.ddispatch.guest.faces.Outer;
-import su.izotov.java.ddispatch.master.faces.ZeroLevelInterface;
+package su.izotov.java.ddispatch.methods;
 
 /**
- * the master class for testing double dispatch
+ * the type representation
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
+ * @version $Id$
+ * @since 1.0
  */
-public class Master
-    extends SuperMaster
-    implements ZeroLevelInterface, RestrictionInterface {
-  @Override public final RestrictionInterface example(final DirectParameter direct) {
-    return new ExpectedResult("Direct method");
+interface TypeRepresentation {
+  /**
+   * the type is subtype of parameter type
+   */
+  boolean isSubtypeOf(TypeRepresentation typeRepresentation)
+      throws MethodAmbiguouslyDefinedException;
+
+  default boolean isSupertypeOf(final Class<?> type)
+      throws MethodAmbiguouslyDefinedException {
+    return !this.toClass().equals(type) && this.toClass().isAssignableFrom(type);
   }
 
-  @Override public final RestrictionInterface example(final InheritedParamInterface direct) {
-    return new ExpectedResult("Master inherited method");
-  }
-
-  @Override public final Object example(final Outer outer) {
-    return new Object();
-  }
+  /**
+   * represent as Class object
+   */
+  Class<?> toClass()
+      throws MethodAmbiguouslyDefinedException;
 }

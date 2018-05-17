@@ -25,6 +25,7 @@ package su.izotov.java.ddispatch.master;
 
 import su.izotov.java.ddispatch.ExpectedResult;
 import su.izotov.java.ddispatch.RestrictionInterface;
+import su.izotov.java.ddispatch.guest.faces.MultiMethodParamInterface;
 import su.izotov.java.ddispatch.guest.faces.SuperDirect;
 
 /**
@@ -35,5 +36,9 @@ import su.izotov.java.ddispatch.guest.faces.SuperDirect;
 public class SuperMaster {
   public final RestrictionInterface example(final SuperDirect direct) {
     return new ExpectedResult("SuperDirect method");
+  }
+
+  public final RestrictionInterface example(final MultiMethodParamInterface multi) {
+    return new ExpectedResult("MultiMethodParameterGuest first method");
   }
 }

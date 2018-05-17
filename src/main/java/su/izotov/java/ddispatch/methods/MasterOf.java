@@ -21,46 +21,48 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-
-/*
- * To change this license header, toMethod License Headers in Project Properties.
- * To change this template file, toMethod Tools | Templates
- * and open the template in the editor.
- */
-package su.izotov.java.ddispatch;
+package su.izotov.java.ddispatch.methods;
 
 import java.util.Objects;
 
 /**
- * result of double dispatch tests
+ * the master type of method
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
+ * @version $Id$
+ * @since 1.0
  */
-public class ExpectedResult
-    implements RestrictionInterface {
-  private final String text;
+class MasterOf
+    implements TypeRepresentation {
+  private final MethodRepresentation methodRepresentation;
 
-  public ExpectedResult(final String text) {
-    this.text = text;
+  MasterOf(final MethodRepresentation methodRepresentation) {
+    this.methodRepresentation = methodRepresentation;
+  }
+
+  @Override public final boolean isSubtypeOf(final TypeRepresentation typeRepresentation)
+      throws MethodAmbiguouslyDefinedException {
+    return new MasterOfMethod(this.methodRepresentation.toMethod()).isSubtypeOf(typeRepresentation);
+  }
+
+  @Override public final Class<?> toClass()
+      throws MethodAmbiguouslyDefinedException {
+    return new MasterOfMethod(this.methodRepresentation.toMethod()).toClass();
   }
 
   @Override public final int hashCode() {
-    int hash = 5;
-    hash = 97 * hash + Objects.hashCode(this.text);
-    return hash;
+    return Objects.hash(this.methodRepresentation);
   }
 
-  @Override public final boolean equals(final Object obj) {
+  @SuppressWarnings("MethodWithMultipleReturnPoints") @Override
+  public final boolean equals(final Object obj) {
     if (this == obj) {
       return true;
     }
-    if (obj == null) {
+    if (obj == null || this.getClass() != obj.getClass()) {
       return false;
     }
-    if (this.getClass() != obj.getClass()) {
-      return false;
-    }
-    final ExpectedResult other = (ExpectedResult) obj;
-    return Objects.equals(this.text, other.text);
+    final MasterOf guestOf = (MasterOf) obj;
+    return Objects.equals(this.methodRepresentation, guestOf.methodRepresentation);
   }
 }

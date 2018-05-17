@@ -21,38 +21,16 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
+package su.izotov.java.ddispatch.guest.impl;
 
-/*
- * To change this license header, toMethod License Headers in Project Properties.
- * To change this template file, toMethod Tools | Templates
- * and open the template in the editor.
- */
-package su.izotov.java.ddispatch.master;
-
-import su.izotov.java.ddispatch.ExpectedResult;
 import su.izotov.java.ddispatch.RestrictionInterface;
-import su.izotov.java.ddispatch.guest.faces.DirectParameter;
-import su.izotov.java.ddispatch.guest.faces.InheritedParamInterface;
-import su.izotov.java.ddispatch.guest.faces.Outer;
-import su.izotov.java.ddispatch.master.faces.ZeroLevelInterface;
+import su.izotov.java.ddispatch.guest.faces.MultiMethodParamInterface;
+import su.izotov.java.ddispatch.guest.faces.SecondMultiMethodParamInterface;
 
 /**
- * the master class for testing double dispatch
- * Created with IntelliJ IDEA.
- * @author Vladimir Izotov
+ * impl
+ * @author ive
  */
-public class Master
-    extends SuperMaster
-    implements ZeroLevelInterface, RestrictionInterface {
-  @Override public final RestrictionInterface example(final DirectParameter direct) {
-    return new ExpectedResult("Direct method");
-  }
-
-  @Override public final RestrictionInterface example(final InheritedParamInterface direct) {
-    return new ExpectedResult("Master inherited method");
-  }
-
-  @Override public final Object example(final Outer outer) {
-    return new Object();
-  }
+public class MultiMethodParameterGuest
+    implements MultiMethodParamInterface, SecondMultiMethodParamInterface, RestrictionInterface {
 }

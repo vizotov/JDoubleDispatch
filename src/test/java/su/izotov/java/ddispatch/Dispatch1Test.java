@@ -31,6 +31,7 @@ import su.izotov.java.ddispatch.guest.impl.InInterfaceParameterGuest;
 import su.izotov.java.ddispatch.guest.impl.InSecondInterfaceParameterGuest;
 import su.izotov.java.ddispatch.guest.impl.SuperDirectParameterGuest;
 import su.izotov.java.ddispatch.master.Master;
+import su.izotov.java.ddispatch.methods.MethodAmbiguouslyDefinedException;
 
 /**
  * tests
@@ -44,7 +45,7 @@ public class Dispatch1Test {
   }
 
   @Test public final void testDirectParameter()
-      throws InvocationTargetException, IllegalAccessException {
+      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
     Assert.assertEquals(new ExpectedResult("Direct method"),
                         new ExampleDispatch(new Master(),
                                             new DirectParameterGuest(),
@@ -52,7 +53,7 @@ public class Dispatch1Test {
   }
 
   @Test public final void testSuperDirectParameter()
-      throws InvocationTargetException, IllegalAccessException {
+      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
     Assert.assertEquals(new ExpectedResult("SuperDirect method"),
                         new ExampleDispatch(new Master(),
                                             new SuperDirectParameterGuest(),
@@ -60,7 +61,7 @@ public class Dispatch1Test {
   }
 
   @Test public final void testInInterfaceParameter()
-      throws InvocationTargetException, IllegalAccessException {
+      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
     Assert.assertEquals(new ExpectedResult("InInterface method"),
                         new ExampleDispatch(new Master(),
                                             new InInterfaceParameterGuest(),
@@ -68,7 +69,7 @@ public class Dispatch1Test {
   }
 
   @Test public final void testInSecondInterfaceParameter()
-      throws InvocationTargetException, IllegalAccessException {
+      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
     Assert.assertEquals(new ExpectedResult("InSecondInterface method"),
                         new ExampleDispatch(new Master(),
                                             new InSecondInterfaceParameterGuest(),

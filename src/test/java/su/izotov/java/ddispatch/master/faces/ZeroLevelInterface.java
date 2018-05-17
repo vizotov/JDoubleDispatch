@@ -23,8 +23,10 @@
  */
 package su.izotov.java.ddispatch.master.faces;
 
+import su.izotov.java.ddispatch.ExpectedResult;
 import su.izotov.java.ddispatch.RestrictionInterface;
 import su.izotov.java.ddispatch.guest.faces.DirectParameter;
+import su.izotov.java.ddispatch.guest.faces.InheritedParamInterface;
 import su.izotov.java.ddispatch.guest.faces.Outer;
 
 /**
@@ -37,4 +39,8 @@ public interface ZeroLevelInterface
   RestrictionInterface example(DirectParameter direct);
 
   Object example(Outer outer);
+
+  @Override default RestrictionInterface example(final InheritedParamInterface direct) {
+    return new ExpectedResult("ZeroLevelInterface method");
+  }
 }

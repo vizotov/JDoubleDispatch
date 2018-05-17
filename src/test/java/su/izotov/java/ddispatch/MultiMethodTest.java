@@ -25,44 +25,40 @@ package su.izotov.java.ddispatch;
 
 import java.lang.reflect.InvocationTargetException;
 import org.junit.Assert;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import su.izotov.java.ddispatch.guest.impl.OuterImpl;
-import su.izotov.java.ddispatch.guest.impl.Param;
-import su.izotov.java.ddispatch.guest.impl.Param2;
+import su.izotov.java.ddispatch.guest.impl.InheritedParamImpl;
+import su.izotov.java.ddispatch.guest.impl.MultiMethodParameterGuest;
 import su.izotov.java.ddispatch.master.Master;
 import su.izotov.java.ddispatch.methods.MethodAmbiguouslyDefinedException;
 
 /**
- * tests
+ * if more than one method found
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
+ * @version $Id$
+ * @since 1.0
  */
-public class Dispatch2Test {
+public class MultiMethodTest {
   private static RestrictionInterface defaultMethod(
       final RestrictionInterface master, final RestrictionInterface guest) {
     return new ExpectedResult("defaultMethod");
   }
 
-  @Test public final void testParamByInterface()
+  @Test(expected = MethodAmbiguouslyDefinedException.class)
+  public final void testTwoDifferentMethod()
       throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
-    Assert.assertEquals(new ExpectedResult("SuperParam method"),
-                        new ExampleDispatch(new Master(), new Param(), Dispatch2Test::defaultMethod)
-                            .invoke());
+    new ExampleDispatch(new Master(),
+                        new MultiMethodParameterGuest(),
+                        MultiMethodTest::defaultMethod).invoke();
+    assertTrue(true);
   }
 
-  @Test public final void testParamBySuperInterface()
+  @Test public final void testTwoInheritedMethod()
       throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
-    Assert.assertEquals(new ExpectedResult("SecondLevelParamInterface method"),
+    Assert.assertEquals(new ExpectedResult("Master inherited method"),
                         new ExampleDispatch(new Master(),
-                                            new Param2(),
-                                            Dispatch2Test::defaultMethod).invoke());
-  }
-
-  @Test public final void testNoMethods()
-      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
-    Assert.assertEquals(new ExpectedResult("defaultMethod"),
-                        new ExampleDispatch(new Master(),
-                                            new OuterImpl(),
-                                            Dispatch2Test::defaultMethod).invoke());
+                                            new InheritedParamImpl(),
+                                            MultiMethodTest::defaultMethod).invoke());
   }
 }

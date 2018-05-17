@@ -71,3 +71,17 @@ Object someMethod(Object param) {
 When this method is called, the actual method will be searched based on runtime object classes. 
 Method can be found both in the Master class itself, and in its superclasses and implemented interfaces.
 If the method is found, it is started. If not found, the specified method is started by default.
+
+If several suitable methods are found, then firstMethod method is selected in accordance with the following algorithm:
+
+If the parameters of the secondMethod methods belong to the same class hierarchy, then a method with a 
+parameter belonging to the child class or interface is selected. If the parameters belong to 
+different independent hierarchies, then it throws a MethodAmbiguouslyDefinedException.
+
+After this procedure, only methods with parameters of the same type remain in the list.
+
+Further, if declaring classes of both methods belong to the same hierarchy, then firstMethod method 
+overrides the other. Therefore, the override method is selected.
+
+If the declaring classes of the secondMethod methods refer to different, unrelated hierarchies, then it 
+throws a MethodAmbiguouslyDefinedException.
