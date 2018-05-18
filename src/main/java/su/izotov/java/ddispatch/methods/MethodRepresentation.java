@@ -35,6 +35,8 @@ import java.lang.reflect.Method;
 public interface MethodRepresentation {
   /**
    * Get the method
+   * @return the actual method
+   * @throws MethodAmbiguouslyDefinedException there is more than one method found
    */
   Method toMethod()
       throws MethodAmbiguouslyDefinedException;

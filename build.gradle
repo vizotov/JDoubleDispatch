@@ -46,3 +46,92 @@ idea {
         excludeDirs = [file("README.md")]
     }
 }
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+group = "su.izotov"
+archivesBaseName = "JDoubleDispatch"
+version = "0.1"
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'Java Double Dispatch Library'
+        packaging 'jar'
+        // optionally artifactId can be defined here
+        description 'The Java Double Dispatch library is the implementation of double dispatch feature in Java.'
+        url 'https://github.com/vizotov/JDoubleDispatch'
+
+        scm {
+          connection 'scm:svn:https://github.com/vizotov/JDoubleDispatch.git'
+          developerConnection 'scm:svn:https://github.com/vizotov/JDoubleDispatch.git'
+          url 'https://github.com/vizotov/JDoubleDispatch.git'
+        }
+
+        licenses {
+          license {
+            name 'The MIT License'
+            url 'https://github.com/vizotov/JDoubleDispatch/blob/master/LICENSE.md'
+          }
+        }
+
+        developers {
+          developer {
+            id 'vizotov'
+            name 'Vladimir Izotov'
+            email 'izotov6@yandex.ru'
+          }
+        }
+      }
+    }
+  }
+}
+
+buildscript {
+  repositories {
+    mavenCentral()
+    //Needed only for SNAPSHOT versions
+    //maven { url "http://oss.sonatype.org/content/repositories/snapshots/" }
+  }
+  dependencies {
+    classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0"
+  }
+}
+
+apply plugin: 'io.codearte.nexus-staging'
+
+nexusStaging {
+  packageGroup = "su.izotov" //optional if packageGroup == project.getGroup()
+  //stagingProfileId = "yourStagingProfileId" //when not defined will be got from server using
+  //"packageGroup"
+}

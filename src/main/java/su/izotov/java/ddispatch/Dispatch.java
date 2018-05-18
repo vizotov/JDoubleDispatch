@@ -42,7 +42,7 @@ import su.izotov.java.ddispatch.methods.OneOfTwoMethods;
  * @param <G> Type of guest object.
  * @param <R> Type of returned object. All methods, which return result is
  * not assignable to this type, will be ignored
- * Created with IntelliJ IDEA.
+ * <p>Created with IntelliJ IDEA.</p>
  * @author Vladimir Izotov
  */
 public class Dispatch<M, G, R> {
@@ -65,6 +65,10 @@ public class Dispatch<M, G, R> {
   /**
    * The conversation of master and guest by selected method. If method is found, then
    * returns it's result, otherwise calls the default method and returns it`s result
+   * @return result of the method evaluation
+   * @throws InvocationTargetException exception, thrown by method
+   * @throws IllegalAccessException something is wrong
+   * @throws MethodAmbiguouslyDefinedException there is more than one method found
    */
   public final R invoke()
       throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
