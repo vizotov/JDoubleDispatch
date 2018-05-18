@@ -70,11 +70,12 @@ signing {
 
 group = "su.izotov"
 archivesBaseName = "JDoubleDispatch"
-version = "0.1"
+version = "0.2"
 
 uploadArchives {
   repositories {
     mavenDeployer {
+      conf2ScopeMappings.mappings.remove(configurations.testCompile)
       beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
       repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
