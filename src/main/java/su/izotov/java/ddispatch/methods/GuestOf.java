@@ -40,10 +40,10 @@ class GuestOf
     this.methodRepresentation = methodRepresentation;
   }
 
-  @Override public final boolean isSubtypeOf(final TypeRepresentation typeRepresentation)
-      throws MethodAmbiguouslyDefinedException {
-    return new GuestOfMethod(this.methodRepresentation.toMethod()).isSubtypeOf(typeRepresentation);
-  }
+//  @Override public final boolean isSubtypeOf(final TypeRepresentation typeRepresentation)
+//      throws MethodAmbiguouslyDefinedException {
+//    return new GuestOfMethod(this.methodRepresentation.toMethod()).isSubtypeOf(typeRepresentation);
+//  }
 
   @Override public final Class<?> toClass()
       throws MethodAmbiguouslyDefinedException {

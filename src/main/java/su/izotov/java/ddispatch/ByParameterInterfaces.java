@@ -55,7 +55,7 @@ class ByParameterInterfaces
   /**
    * use this function for performance reasons, instead of creating the one time used object
    */
-  private static Set<Method> findMethod(
+  private static Set<Method> findMethods(
       final Class<?> guestClass,
       final Class<?> masterClass,
       final String methodName,
@@ -71,20 +71,20 @@ class ByParameterInterfaces
         }
       } catch (final NoSuchMethodException ignored) {
       }
-      methods.addAll(ByParameterInterfaces.findMethod(masterClass,
-                                                      guestInterface,
-                                                      methodName,
-                                                      returnClass,
-                                                      emptyMethods));
+      methods.addAll(ByParameterInterfaces.findMethods(masterClass,
+                                                       guestInterface,
+                                                       methodName,
+                                                       returnClass,
+                                                       emptyMethods));
     }
     return methods;
   }
 
   @Override public final Set<Method> findMethods() {
-    return ByParameterInterfaces.findMethod(this.guestClass,
-                                            this.masterClass,
-                                            this.methodName,
-                                            this.returnClass,
-                                            this.nextMethodsSource);
+    return ByParameterInterfaces.findMethods(this.guestClass,
+                                             this.masterClass,
+                                             this.methodName,
+                                             this.returnClass,
+                                             this.nextMethodsSource);
   }
 }

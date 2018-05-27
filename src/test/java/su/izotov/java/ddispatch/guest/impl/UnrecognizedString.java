@@ -21,43 +21,17 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.methods;
 
-import java.lang.reflect.Method;
-import java.util.Objects;
+package su.izotov.java.ddispatch.guest.impl;
+
+import su.izotov.java.ddispatch.RestrictionInterface;
 
 /**
- * The type of Master object of method
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-class MasterOfMethod
-    implements TypeRepresentation {
-  private final Method method;
-
-  MasterOfMethod(final Method method) {
-    this.method = method;
-  }
-
-  @Override public final Class<?> toClass() {
-    return this.method.getDeclaringClass();
-  }
-
-  @Override public final int hashCode() {
-    return Objects.hash(this.method);
-  }
-
-  @SuppressWarnings("MethodWithMultipleReturnPoints") @Override
-  public final boolean equals(final Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || this.getClass() != obj.getClass()) {
-      return false;
-    }
-    final MasterOfMethod thatObject = (MasterOfMethod) obj;
-    return Objects.equals(this.method, thatObject.method);
-  }
+public class UnrecognizedString implements RestrictionInterface
+{
 }

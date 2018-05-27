@@ -30,12 +30,17 @@ package su.izotov.java.ddispatch.methods;
  * @version $Id$
  * @since 1.0
  */
-interface TypeRepresentation {
+public interface TypeRepresentation {
   /**
    * the type is subtype of parameter type
+   * @param typeRepresentation type
+   * @return boolean
+   * @throws MethodAmbiguouslyDefinedException exception
    */
-  boolean isSubtypeOf(TypeRepresentation typeRepresentation)
-      throws MethodAmbiguouslyDefinedException;
+  default boolean isSubtypeOf(final TypeRepresentation typeRepresentation)
+      throws MethodAmbiguouslyDefinedException {
+    return typeRepresentation.isSupertypeOf(this.toClass());
+  }
 
   default boolean isSupertypeOf(final Class<?> type)
       throws MethodAmbiguouslyDefinedException {
@@ -44,6 +49,8 @@ interface TypeRepresentation {
 
   /**
    * represent as Class object
+   * @return clazz
+   * @throws MethodAmbiguouslyDefinedException exception
    */
   Class<?> toClass()
       throws MethodAmbiguouslyDefinedException;

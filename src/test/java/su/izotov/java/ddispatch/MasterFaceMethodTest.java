@@ -21,43 +21,37 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.methods;
+package su.izotov.java.ddispatch;
 
-import java.lang.reflect.Method;
-import java.util.Objects;
+import java.lang.reflect.InvocationTargetException;
+import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import su.izotov.java.ddispatch.guest.impl.UnrecognizedString;
+import su.izotov.java.ddispatch.master.faces.Lang;
+import su.izotov.java.ddispatch.methods.MethodAmbiguouslyDefinedException;
 
 /**
- * The type of Master object of method
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-class MasterOfMethod
-    implements TypeRepresentation {
-  private final Method method;
-
-  MasterOfMethod(final Method method) {
-    this.method = method;
+public class MasterFaceMethodTest {
+  private RestrictionInterface defaultMethod(
+      final RestrictionInterface master, final RestrictionInterface guest) {
+    return new ExpectedResult("defaultMethod");
   }
 
-  @Override public final Class<?> toClass() {
-    return this.method.getDeclaringClass();
+  @Test public void test()
+      throws IllegalAccessException, MethodAmbiguouslyDefinedException, InvocationTargetException {
+    RestrictionInterface expResult = new ExpectedResult("InMasterInterface method");
+    RestrictionInterface result = new ExampleDispatch(new MKLang(),
+                                                      new UnrecognizedString(),
+                                                      this::defaultMethod).invoke();
+    assertEquals(expResult, result);
   }
 
-  @Override public final int hashCode() {
-    return Objects.hash(this.method);
-  }
-
-  @SuppressWarnings("MethodWithMultipleReturnPoints") @Override
-  public final boolean equals(final Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || this.getClass() != obj.getClass()) {
-      return false;
-    }
-    final MasterOfMethod thatObject = (MasterOfMethod) obj;
-    return Objects.equals(this.method, thatObject.method);
+  private class MKLang
+      implements Lang, RestrictionInterface {
   }
 }

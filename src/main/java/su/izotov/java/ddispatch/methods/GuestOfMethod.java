@@ -41,11 +41,6 @@ class GuestOfMethod
     this.method = method;
   }
 
-  @Override public final boolean isSubtypeOf(final TypeRepresentation typeRepresentation)
-      throws MethodAmbiguouslyDefinedException {
-    return typeRepresentation.isSupertypeOf(this.toClass());
-  }
-
   @Override public final Class<?> toClass() {
     return this.method.getParameterTypes()[0];
   }
