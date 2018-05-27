@@ -25,6 +25,9 @@ package su.izotov.java.ddispatch;
 
 import java.lang.reflect.Method;
 import java.util.Set;
+import su.izotov.java.ddispatch.types.GuestClass;
+import su.izotov.java.ddispatch.types.MasterClass;
+import su.izotov.java.ddispatch.types.ReturnClass;
 
 /**
  * Searching method by the interface of parameter
@@ -33,17 +36,17 @@ import java.util.Set;
  */
 class ByParameterInterfaces
     implements MethodsSource {
-  private final Class<?> guestClass;
-  private final Class<?> returnClass;
-  private final Class<?> masterClass;
-  private final String methodName;
+  private final GuestClass    guestClass;
+  private final ReturnClass   returnClass;
+  private final MasterClass   masterClass;
+  private final String        methodName;
   private final MethodsSource nextMethodsSource;
 
   ByParameterInterfaces(
-      final Class<?> masterClass,
-      final Class<?> guestClass,
+      final MasterClass masterClass,
+      final GuestClass guestClass,
       final String methodName,
-      final Class<?> returnClass,
+      final ReturnClass returnClass,
       final MethodsSource nextMethodsSource) {
     this.guestClass = guestClass;
     this.returnClass = returnClass;
@@ -56,23 +59,23 @@ class ByParameterInterfaces
    * use this function for performance reasons, instead of creating the one time used object
    */
   private static Set<Method> findMethods(
-      final Class<?> guestClass,
-      final Class<?> masterClass,
+      final MasterClass masterClass,
+      final GuestClass guestClass,
       final String methodName,
-      final Class<?> returnClass,
+      final ReturnClass returnClass,
       final MethodsSource nextMethodsSource) {
     final Set<Method> methods = nextMethodsSource.findMethods();
     final MethodsSource emptyMethods = new EmptyMethods();
-    for (final Class<?> guestInterface : guestClass.getInterfaces()) {
+    for (final Class<?> guestInterface : guestClass.toClass().getInterfaces()) {
       try {
-        final Method method = masterClass.getMethod(methodName, guestInterface);
-        if (returnClass.isAssignableFrom(method.getReturnType())) {
+        final Method method = masterClass.toClass().getMethod(methodName, guestInterface);
+        if (returnClass.toClass().isAssignableFrom(method.getReturnType())) {
           methods.add(method);
         }
       } catch (final NoSuchMethodException ignored) {
       }
       methods.addAll(ByParameterInterfaces.findMethods(masterClass,
-                                                       guestInterface,
+                                                       new GuestClass(guestInterface),
                                                        methodName,
                                                        returnClass,
                                                        emptyMethods));
@@ -81,8 +84,8 @@ class ByParameterInterfaces
   }
 
   @Override public final Set<Method> findMethods() {
-    return ByParameterInterfaces.findMethods(this.guestClass,
-                                             this.masterClass,
+    return ByParameterInterfaces.findMethods(this.masterClass,
+                                             this.guestClass,
                                              this.methodName,
                                              this.returnClass,
                                              this.nextMethodsSource);

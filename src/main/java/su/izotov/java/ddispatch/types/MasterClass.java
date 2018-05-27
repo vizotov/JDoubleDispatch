@@ -21,11 +21,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-
 package su.izotov.java.ddispatch.types;
-
-import su.izotov.java.ddispatch.methods.MethodAmbiguouslyDefinedException;
-import su.izotov.java.ddispatch.methods.TypeRepresentation;
 
 /**
  * Type of the master object
@@ -34,9 +30,15 @@ import su.izotov.java.ddispatch.methods.TypeRepresentation;
  * @version $Id$
  * @since 1.0
  */
-public class MasterClass implements TypeRepresentation{
+public class MasterClass
+    implements TypeRepresentation {
+  private final Class<?> clazz;
+
+  public MasterClass(final Class<?> clazz) {
+    this.clazz = clazz;
+  }
 
   @Override public Class<?> toClass() {
-    throw new UnsupportedOperationException("#toClass()");
+    return this.clazz;
   }
 }

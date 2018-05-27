@@ -25,6 +25,9 @@ package su.izotov.java.ddispatch;
 
 import java.lang.reflect.Method;
 import java.util.Set;
+import su.izotov.java.ddispatch.types.GuestClass;
+import su.izotov.java.ddispatch.types.MasterClass;
+import su.izotov.java.ddispatch.types.ReturnClass;
 
 /**
  * Searching method by the superclass of parameter
@@ -33,17 +36,17 @@ import java.util.Set;
  */
 public class ByParameterSuperClass
     implements MethodsSource {
-  private final Class<?>      guestClass;
-  private final Class<?>      returnClassRestriction;
-  private final Class<?>      masterClass;
+  private final GuestClass    guestClass;
+  private final ReturnClass   returnClassRestriction;
+  private final MasterClass   masterClass;
   private final String        methodName;
   private final MethodsSource nextMethodsSource;
 
   ByParameterSuperClass(
-      final Class<?> masterClass,
-      final Class<?> guestClass,
+      final MasterClass masterClass,
+      final GuestClass guestClass,
       final String methodName,
-      final Class<?> returnClass,
+      final ReturnClass returnClass,
       final MethodsSource nextMethodsSource) {
     this.guestClass = guestClass;
     this.returnClassRestriction = returnClass;
@@ -54,18 +57,17 @@ public class ByParameterSuperClass
 
   @Override public final Set<Method> findMethods() {
     final Set<Method> methods = this.nextMethodsSource.findMethods();
-    if (this.guestClass.getSuperclass() != null) {
-      methods.addAll(ByParameterClass.findMethods(
-          this.masterClass,
-          this.guestClass.getSuperclass(),
-          this.methodName,
-          this.returnClassRestriction,
-          new ByParameterInterfaces(
-              this.masterClass,
-              this.guestClass.getSuperclass(),
-              this.methodName,
-              this.returnClassRestriction,
-              new EmptyMethods())));
+    if (this.guestClass.toClass().getSuperclass() != null) {
+      final GuestClass guestSuperClass = new GuestClass(this.guestClass.toClass().getSuperclass());
+      methods.addAll(ByParameterClass.findMethods(this.masterClass,
+                                                  guestSuperClass,
+                                                  this.methodName,
+                                                  this.returnClassRestriction,
+                                                  new ByParameterInterfaces(this.masterClass,
+                                                                            guestSuperClass,
+                                                                            this.methodName,
+                                                                            this.returnClassRestriction,
+                                                                            new EmptyMethods())));
     }
     return methods;
   }

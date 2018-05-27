@@ -25,6 +25,9 @@ package su.izotov.java.ddispatch;
 
 import java.lang.reflect.Method;
 import java.util.Set;
+import su.izotov.java.ddispatch.types.GuestClass;
+import su.izotov.java.ddispatch.types.MasterClass;
+import su.izotov.java.ddispatch.types.ReturnClass;
 
 /**
  * Searching method by the class of parameter
@@ -33,17 +36,17 @@ import java.util.Set;
  */
 class ByParameterClass
     implements MethodsSource {
-  private final Class<?>      guestClass;
-  private final Class<?>      returnClassRestriction;
-  private final Class<?>      masterClass;
+  private final GuestClass      guestClass;
+  private final ReturnClass      returnClassRestriction;
+  private final MasterClass      masterClass;
   private final String        methodName;
   private final MethodsSource nextMethodsSource;
 
   ByParameterClass(
-      final Class<?> masterClass,
-      final Class<?> guestClass,
+      final MasterClass masterClass,
+      final GuestClass guestClass,
       final String methodName,
-      final Class<?> returnClass,
+      final ReturnClass returnClass,
       final MethodsSource nextMethodsSource) {
     this.guestClass = guestClass;
     this.returnClassRestriction = returnClass;
@@ -65,15 +68,15 @@ class ByParameterClass
    * use this function for performance reasons, instead of creating the one time used object
    */
   public static Set<Method> findMethods(
-      final Class<?> masterClass,
-      final Class<?> guestClass,
+      final MasterClass masterClass,
+      final GuestClass guestClass,
       final String methodName,
-      final Class<?> returnClass,
+      final ReturnClass returnClass,
       final MethodsSource nextMethodsSource) {
     final Set<Method> methods = nextMethodsSource.findMethods();
     try {
-      final Method method = masterClass.getMethod(methodName, guestClass);
-      if (returnClass.isAssignableFrom(method.getReturnType())) {
+      final Method method = masterClass.toClass().getMethod(methodName, guestClass.toClass());
+      if (returnClass.toClass().isAssignableFrom(method.getReturnType())) {
         methods.add(method);
       }
     } catch (final NoSuchMethodException ignored) {

@@ -21,37 +21,24 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.methods;
+package su.izotov.java.ddispatch.types;
 
 /**
- * the type representation
+ * Type of the return object
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-public interface TypeRepresentation {
-  /**
-   * the type is subtype of parameter type
-   * @param typeRepresentation type
-   * @return boolean
-   * @throws MethodAmbiguouslyDefinedException exception
-   */
-  default boolean isSubtypeOf(final TypeRepresentation typeRepresentation)
-      throws MethodAmbiguouslyDefinedException {
-    return typeRepresentation.isSupertypeOf(this.toClass());
+public class ReturnClass
+    implements TypeRepresentation {
+  private final Class<?> clazz;
+
+  public ReturnClass(final Class<?> clazz) {
+    this.clazz = clazz;
   }
 
-  default boolean isSupertypeOf(final Class<?> type)
-      throws MethodAmbiguouslyDefinedException {
-    return !this.toClass().equals(type) && this.toClass().isAssignableFrom(type);
+  @Override public Class<?> toClass() {
+    return this.clazz;
   }
-
-  /**
-   * represent as Class object
-   * @return clazz
-   * @throws MethodAmbiguouslyDefinedException exception
-   */
-  Class<?> toClass()
-      throws MethodAmbiguouslyDefinedException;
 }

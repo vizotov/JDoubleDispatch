@@ -21,44 +21,24 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.methods;
-
-import java.lang.reflect.Method;
-import java.util.Objects;
-import su.izotov.java.ddispatch.types.TypeRepresentation;
+package su.izotov.java.ddispatch.types;
 
 /**
- * The type of Guest object of method
+ * Type of the guest object
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-class GuestOfMethod
+public class GuestClass
     implements TypeRepresentation {
-  private final Method method;
+  private final Class<?> clazz;
 
-  GuestOfMethod(final Method method) {
-    this.method = method;
+  public GuestClass(final Class<?> clazz) {
+    this.clazz = clazz;
   }
 
-  @Override public final Class<?> toClass() {
-    return this.method.getParameterTypes()[0];
-  }
-
-  @Override public final int hashCode() {
-    return Objects.hash(this.method);
-  }
-
-  @SuppressWarnings("MethodWithMultipleReturnPoints") @Override
-  public final boolean equals(final Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || this.getClass() != obj.getClass()) {
-      return false;
-    }
-    final GuestOfMethod thatObject = (GuestOfMethod) obj;
-    return Objects.equals(this.method, thatObject.method);
+  @Override public Class<?> toClass() {
+    return this.clazz;
   }
 }

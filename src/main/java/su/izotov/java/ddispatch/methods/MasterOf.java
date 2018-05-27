@@ -24,6 +24,7 @@
 package su.izotov.java.ddispatch.methods;
 
 import java.util.Objects;
+import su.izotov.java.ddispatch.types.TypeRepresentation;
 
 /**
  * the master type of method

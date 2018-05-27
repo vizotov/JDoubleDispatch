@@ -24,6 +24,7 @@
 package su.izotov.java.ddispatch.methods;
 
 import java.lang.reflect.Method;
+import su.izotov.java.ddispatch.types.TypeRepresentation;
 
 /**
  * Select firstMethod method of secondMethod in accordance with the following algorithm:

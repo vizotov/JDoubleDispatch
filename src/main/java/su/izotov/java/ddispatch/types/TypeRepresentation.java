@@ -21,44 +21,39 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.methods;
+package su.izotov.java.ddispatch.types;
 
-import java.lang.reflect.Method;
-import java.util.Objects;
-import su.izotov.java.ddispatch.types.TypeRepresentation;
+import su.izotov.java.ddispatch.methods.MethodAmbiguouslyDefinedException;
 
 /**
- * The type of Guest object of method
+ * the type representation
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-class GuestOfMethod
-    implements TypeRepresentation {
-  private final Method method;
-
-  GuestOfMethod(final Method method) {
-    this.method = method;
+public interface TypeRepresentation {
+  /**
+   * the type is subtype of parameter type
+   * @param typeRepresentation type
+   * @return boolean
+   * @throws MethodAmbiguouslyDefinedException exception
+   */
+  default boolean isSubtypeOf(final TypeRepresentation typeRepresentation)
+      throws MethodAmbiguouslyDefinedException {
+    return typeRepresentation.isSupertypeOf(this.toClass());
   }
 
-  @Override public final Class<?> toClass() {
-    return this.method.getParameterTypes()[0];
+  default boolean isSupertypeOf(final Class<?> type)
+      throws MethodAmbiguouslyDefinedException {
+    return !this.toClass().equals(type) && this.toClass().isAssignableFrom(type);
   }
 
-  @Override public final int hashCode() {
-    return Objects.hash(this.method);
-  }
-
-  @SuppressWarnings("MethodWithMultipleReturnPoints") @Override
-  public final boolean equals(final Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || this.getClass() != obj.getClass()) {
-      return false;
-    }
-    final GuestOfMethod thatObject = (GuestOfMethod) obj;
-    return Objects.equals(this.method, thatObject.method);
-  }
+  /**
+   * represent as Class object
+   * @return clazz
+   * @throws MethodAmbiguouslyDefinedException exception
+   */
+  Class<?> toClass()
+      throws MethodAmbiguouslyDefinedException;
 }

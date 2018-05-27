@@ -34,6 +34,9 @@ import su.izotov.java.ddispatch.methods.MethodAmbiguouslyDefinedException;
 import su.izotov.java.ddispatch.methods.MethodRepresentation;
 import su.izotov.java.ddispatch.methods.OneMethod;
 import su.izotov.java.ddispatch.methods.OneOfTwoMethods;
+import su.izotov.java.ddispatch.types.GuestClass;
+import su.izotov.java.ddispatch.types.MasterClass;
+import su.izotov.java.ddispatch.types.ReturnClass;
 
 /**
  * Double dispatch capability for method call.
@@ -72,12 +75,14 @@ public class Dispatch<M, G, R> {
    */
   public final R invoke()
       throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
-    final Class<?> masterClass = this.master.getClass();
-    final Class<?> guestClass = this.guest.getClass();
+    final MasterClass masterClass = new MasterClass(this.master.getClass());
+    final GuestClass guestClass = new GuestClass(this.guest.getClass());
     final GenericsContext context = GenericsResolver.resolve(this.getClass()).type(Dispatch.class);
     // final Class<?> masterClassRestriction = context.generics().get(0); // Class M for right method searching
     // final Class<?> guestClassRestriction = context.generics().get(1); // Class G for right method searching
-    final Class<?> returnClass = context.generics().get(2); // Class R for right method searching
+    final ReturnClass returnClass = new ReturnClass(context.generics().get(2)); // Class R for
+    // right method
+    // searching
     final R ret;
     final Set<Method> methods = new ByParameterClass(masterClass,
                                                      guestClass,
