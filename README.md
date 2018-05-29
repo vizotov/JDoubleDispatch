@@ -102,7 +102,7 @@ Maven:
 <dependency>
   <groupId>su.izotov</groupId>
   <artifactId>JDoubleDispatch</artifactId>
-  <version>0.2</version>
+  <version>0.3</version>
 </dependency>
 ```
 
@@ -110,6 +110,6 @@ Gradle:
 
 ```groovy
 dependencies {
-    compile 'su.izotov:JDoubleDispatch:0.2'
+    compile 'su.izotov:JDoubleDispatch:0.3'
 }
 ```
