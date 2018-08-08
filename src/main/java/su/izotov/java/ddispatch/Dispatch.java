@@ -23,7 +23,6 @@
  */
 package su.izotov.java.ddispatch;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Set;
@@ -31,9 +30,11 @@ import java.util.function.BiFunction;
 import ru.vyarus.java.generics.resolver.GenericsResolver;
 import ru.vyarus.java.generics.resolver.context.GenericsContext;
 import su.izotov.java.ddispatch.methods.MethodAmbiguouslyDefinedException;
+import su.izotov.java.ddispatch.methods.MethodFunction;
 import su.izotov.java.ddispatch.methods.MethodRepresentation;
 import su.izotov.java.ddispatch.methods.OneMethod;
 import su.izotov.java.ddispatch.methods.OneOfTwoMethods;
+import su.izotov.java.ddispatch.methods.ResultFunction;
 import su.izotov.java.ddispatch.types.GuestClass;
 import su.izotov.java.ddispatch.types.MasterClass;
 import su.izotov.java.ddispatch.types.ReturnClass;
@@ -49,16 +50,16 @@ import su.izotov.java.ddispatch.types.ReturnClass;
  * @author Vladimir Izotov
  */
 public class Dispatch<M, G, R> {
+
   private final String methodName;
   private final M master;
   private final G guest;
   private final BiFunction<M, G, R> defaultMethod;
 
-  protected Dispatch(
-      final M master,
-      final G guest,
-      final String methodName,
-      final BiFunction<M, G, R> defaultMethod) {
+  protected Dispatch(final M master,
+                     final G guest,
+                     final String methodName,
+                     final BiFunction<M, G, R> defaultMethod) {
     this.master = master;
     this.guest = guest;
     this.methodName = methodName;
@@ -69,21 +70,31 @@ public class Dispatch<M, G, R> {
    * The conversation of master and guest by selected method. If method is found, then
    * returns it's result, otherwise calls the default method and returns it`s result
    * @return result of the method evaluation
-   * @throws InvocationTargetException exception, thrown by method
-   * @throws IllegalAccessException something is wrong
    * @throws MethodAmbiguouslyDefinedException there is more than one method found
    */
-  public final R invoke()
-      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
+  public final R invoke() throws
+                          MethodAmbiguouslyDefinedException {
+    return this.resultFunction()
+               .apply(this.master,
+                      this.guest);
+  }
+
+  /**
+   * the result function
+   * @return the function
+   * @throws MethodAmbiguouslyDefinedException more than one method is found
+   */
+  public ResultFunction<M, G, R> resultFunction() throws
+                                                  MethodAmbiguouslyDefinedException {
     final MasterClass masterClass = new MasterClass(this.master.getClass());
     final GuestClass guestClass = new GuestClass(this.guest.getClass());
-    final GenericsContext context = GenericsResolver.resolve(this.getClass()).type(Dispatch.class);
+    final GenericsContext context = GenericsResolver.resolve(this.getClass())
+                                                    .type(Dispatch.class);
     // final Class<?> masterClassRestriction = context.generics().get(0); // Class M for right method searching
     // final Class<?> guestClassRestriction = context.generics().get(1); // Class G for right method searching
-    final ReturnClass returnClass = new ReturnClass(context.generics().get(2)); // Class R for
-    // right method
-    // searching
-    final R ret;
+    final ReturnClass returnClass = new ReturnClass(context.generics()
+                                                           .get(2)); // Class R for right method searching
+    ResultFunction<M, G, R> method;
     final Set<Method> methods = new ByParameterClass(masterClass,
                                                      guestClass,
                                                      this.methodName,
@@ -92,25 +103,36 @@ public class Dispatch<M, G, R> {
                                                                                guestClass,
                                                                                this.methodName,
                                                                                returnClass,
-                                                                               new ByParameterSuperClass(
-                                                                                   masterClass,
-                                                                                   guestClass,
-                                                                                   this.methodName,
-                                                                                   returnClass,
-                                                                                   new EmptyMethods())))
-        .findMethods();
+                                                                               new ByParameterSuperClass(masterClass,
+                                                                                                         guestClass,
+                                                                                                         this.methodName,
+                                                                                                         returnClass,
+                                                                                                         new EmptyMethods()))).findMethods();
     if (methods.isEmpty()) {
-      ret = this.defaultMethod.apply(this.master, this.guest);
+      method = new ResultFunction<M, G, R>() {
+        @Override
+        public String toString() {
+          return "default method";
+        }
+
+        @Override
+        public R apply(final M m,
+                       final G g) {
+          return Dispatch.this.defaultMethod.apply(m,
+                                                   g);
+        }
+      };
     } else {
       final Iterator<Method> iterator = methods.iterator();
       MethodRepresentation currentMethod = new OneMethod(iterator.next());
       while (iterator.hasNext()) {
         final MethodRepresentation nextMethod = new OneMethod(iterator.next());
-        currentMethod = new OneOfTwoMethods(currentMethod, nextMethod);
+        currentMethod = new OneOfTwoMethods(currentMethod,
+                                            nextMethod);
       }
-      //noinspection unchecked
-      ret = (R) currentMethod.toMethod().invoke(this.master, this.guest);
+      final Method finalMethod = currentMethod.toMethod();
+      method = new MethodFunction<>(finalMethod);
     }
-    return ret;
+    return method;
   }
 }
