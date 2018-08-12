@@ -34,18 +34,22 @@ import java.lang.reflect.Method;
  */
 public class MethodAmbiguouslyDefinedException
     extends Exception {
+
   private final Method firstMethod;
   private final Method secondMethod;
 
-  public MethodAmbiguouslyDefinedException(
-      final Method firstMethod, final Method secondMethod) {
+  public MethodAmbiguouslyDefinedException(final Method firstMethod,
+                                           final Method secondMethod) {
     super();
     this.firstMethod = firstMethod;
     this.secondMethod = secondMethod;
   }
 
-  @Override public final String getMessage() {
+  @Override
+  public final String getMessage() {
     final String message = super.getMessage();
-    return String.format("Ambiguity is found! %s and %s", this.firstMethod, this.secondMethod);
+    return String.format("Ambiguity is found! %s and %s",
+                         new MethodFunction<>(this.firstMethod),
+                         new MethodFunction<>(this.secondMethod));
   }
 }

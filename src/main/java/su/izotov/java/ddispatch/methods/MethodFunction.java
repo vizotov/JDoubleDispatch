@@ -43,7 +43,9 @@ public class MethodFunction<M, G, R>
 
   @Override
   public String toString() {
-    return this.method.toString();
+    return method.getReturnType()
+                 .getSimpleName() + " " + method.getDeclaringClass()
+                                                .getSimpleName() + "." + method.getName() + "(" + method.getParameterTypes()[0].getSimpleName() + ")";
   }
 
   @Override
