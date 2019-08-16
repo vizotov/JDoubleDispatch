@@ -29,15 +29,6 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import ru.vyarus.java.generics.resolver.GenericsResolver;
 import ru.vyarus.java.generics.resolver.context.GenericsContext;
-import su.izotov.java.ddispatch.methods.MethodAmbiguouslyDefinedException;
-import su.izotov.java.ddispatch.methods.MethodFunction;
-import su.izotov.java.ddispatch.methods.MethodRepresentation;
-import su.izotov.java.ddispatch.methods.OneMethod;
-import su.izotov.java.ddispatch.methods.OneOfTwoMethods;
-import su.izotov.java.ddispatch.methods.ResultFunction;
-import su.izotov.java.ddispatch.types.GuestClass;
-import su.izotov.java.ddispatch.types.MasterClass;
-import su.izotov.java.ddispatch.types.ReturnClass;
 
 /**
  * Double dispatch capability for method call.
@@ -80,21 +71,21 @@ public class Dispatch<M, G, R> {
   }
 
   /**
-   * the result function
+   * the result function for delayed start
    * @return the function
    * @throws MethodAmbiguouslyDefinedException more than one method is found
    */
-  public ResultFunction<M, G, R> resultFunction() throws
+  @SuppressWarnings("WeakerAccess")
+  public final ResultFunction<M, G, R> resultFunction() throws
                                                   MethodAmbiguouslyDefinedException {
-    final MasterClass masterClass = new MasterClass(this.master.getClass());
-    final GuestClass guestClass = new GuestClass(this.guest.getClass());
+    final MasterClass masterClass = new MasterClassImpl(this.master.getClass());
+    final GuestClass guestClass = new GuestClassImpl(this.guest.getClass());
     final GenericsContext context = GenericsResolver.resolve(this.getClass())
                                                     .type(Dispatch.class);
     // final Class<?> masterClassRestriction = context.generics().get(0); // Class M for right method searching
     // final Class<?> guestClassRestriction = context.generics().get(1); // Class G for right method searching
-    final ReturnClass returnClass = new ReturnClass(context.generics()
-                                                           .get(2)); // Class R for right method searching
-    ResultFunction<M, G, R> method;
+    final ReturnClass returnClass = new ReturnClassImpl(context.generics()
+                                                               .get(2)); // Class R for right method searching
     final Set<Method> methods = new ByParameterClass(masterClass,
                                                      guestClass,
                                                      this.methodName,
@@ -108,6 +99,7 @@ public class Dispatch<M, G, R> {
                                                                                                          this.methodName,
                                                                                                          returnClass,
                                                                                                          new EmptyMethods()))).findMethods();
+    final ResultFunction<M, G, R> method;
     if (methods.isEmpty()) {
       method = new ResultFunction<M, G, R>() {
         @Override
@@ -116,10 +108,10 @@ public class Dispatch<M, G, R> {
         }
 
         @Override
-        public R apply(final M m,
-                       final G g) {
-          return Dispatch.this.defaultMethod.apply(m,
-                                                   g);
+        public R apply(final M master,
+                       final G guest) {
+          return Dispatch.this.defaultMethod.apply(master,
+                                                   guest);
         }
       };
     } else {

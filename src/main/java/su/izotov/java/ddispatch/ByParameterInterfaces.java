@@ -25,9 +25,6 @@ package su.izotov.java.ddispatch;
 
 import java.lang.reflect.Method;
 import java.util.Set;
-import su.izotov.java.ddispatch.types.GuestClass;
-import su.izotov.java.ddispatch.types.MasterClass;
-import su.izotov.java.ddispatch.types.ReturnClass;
 
 /**
  * Searching method by the interface of parameter
@@ -75,7 +72,7 @@ class ByParameterInterfaces
       } catch (final NoSuchMethodException ignored) {
       }
       methods.addAll(ByParameterInterfaces.findMethods(masterClass,
-                                                       new GuestClass(guestInterface),
+                                                       new GuestClassImpl(guestInterface),
                                                        methodName,
                                                        returnClass,
                                                        emptyMethods));

@@ -23,14 +23,12 @@
  */
 package su.izotov.java.ddispatch;
 
-import java.lang.reflect.InvocationTargetException;
 import org.junit.Assert;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import su.izotov.java.ddispatch.guest.impl.InheritedParamImpl;
 import su.izotov.java.ddispatch.guest.impl.MultiMethodParameterGuest;
 import su.izotov.java.ddispatch.master.Master;
-import su.izotov.java.ddispatch.methods.MethodAmbiguouslyDefinedException;
 
 /**
  * if more than one method found
@@ -46,16 +44,16 @@ public class MultiMethodTest {
   }
 
   @Test(expected = MethodAmbiguouslyDefinedException.class)
-  public final void testTwoDifferentMethod()
-      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
+  public final void testTwoDifferentMethod() throws
+                                             MethodAmbiguouslyDefinedException {
     new ExampleDispatch(new Master(),
                         new MultiMethodParameterGuest(),
                         MultiMethodTest::defaultMethod).invoke();
     assertTrue(true);
   }
 
-  @Test public final void testTwoInheritedMethod()
-      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
+  @Test public final void testTwoInheritedMethod() throws
+                                                   MethodAmbiguouslyDefinedException {
     Assert.assertEquals(new ExpectedResult("Master inherited method"),
                         new ExampleDispatch(new Master(),
                                             new InheritedParamImpl(),

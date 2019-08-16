@@ -21,49 +21,37 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.methods;
-
-import java.util.Objects;
-import su.izotov.java.ddispatch.types.TypeRepresentation;
+package su.izotov.java.ddispatch;
 
 /**
- * the guest type of method
+ * the type representation
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-class GuestOf
-    implements TypeRepresentation {
-  private final MethodRepresentation methodRepresentation;
-
-  GuestOf(final MethodRepresentation methodRepresentation) {
-    this.methodRepresentation = methodRepresentation;
-  }
-
-//  @Override public final boolean isSubtypeOf(final TypeRepresentation typeRepresentation)
-//      throws MethodAmbiguouslyDefinedException {
-//    return new GuestOfMethod(this.methodRepresentation.toMethod()).isSubtypeOf(typeRepresentation);
-//  }
-
-  @Override public final Class<?> toClass()
+interface TypeRepresentation {
+  /**
+   * the type is subtype of parameter type
+   * @param typeRepresentation type
+   * @return boolean
+   * @throws MethodAmbiguouslyDefinedException exception
+   */
+  default boolean isSubtypeOf(final TypeRepresentation typeRepresentation)
       throws MethodAmbiguouslyDefinedException {
-    return new GuestOfMethod(this.methodRepresentation.toMethod()).toClass();
+    return typeRepresentation.isSupertypeOf(this.toClass());
   }
 
-  @Override public final int hashCode() {
-    return Objects.hash(this.methodRepresentation);
+  default boolean isSupertypeOf(final Class<?> type)
+      throws MethodAmbiguouslyDefinedException {
+    return !this.toClass().equals(type) && this.toClass().isAssignableFrom(type);
   }
 
-  @SuppressWarnings("MethodWithMultipleReturnPoints") @Override
-  public final boolean equals(final Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || this.getClass() != obj.getClass()) {
-      return false;
-    }
-    final GuestOf guestOf = (GuestOf) obj;
-    return Objects.equals(this.methodRepresentation, guestOf.methodRepresentation);
-  }
+  /**
+   * represent as Class object
+   * @return clazz
+   * @throws MethodAmbiguouslyDefinedException exception
+   */
+  Class<?> toClass() throws
+                     MethodAmbiguouslyDefinedException;
 }

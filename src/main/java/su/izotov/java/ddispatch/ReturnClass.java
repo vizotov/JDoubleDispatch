@@ -21,7 +21,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.types;
+package su.izotov.java.ddispatch;
 
 /**
  * Type of the return object
@@ -30,15 +30,9 @@ package su.izotov.java.ddispatch.types;
  * @version $Id$
  * @since 1.0
  */
-public class ReturnClass
-    implements TypeRepresentation {
-  private final Class<?> clazz;
+public interface ReturnClass
+    extends TypeRepresentation {
 
-  public ReturnClass(final Class<?> clazz) {
-    this.clazz = clazz;
-  }
-
-  @Override public Class<?> toClass() {
-    return this.clazz;
-  }
+  @Override
+  Class<?> toClass();
 }

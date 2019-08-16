@@ -21,33 +21,38 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.methods;
+package su.izotov.java.ddispatch;
 
-import java.lang.reflect.Method;
 import java.util.Objects;
-import su.izotov.java.ddispatch.types.TypeRepresentation;
 
 /**
- * The type of Guest object of method
+ * the master type of method
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-class GuestOfMethod
+class MasterOf
     implements TypeRepresentation {
-  private final Method method;
+  private final MethodRepresentation methodRepresentation;
 
-  GuestOfMethod(final Method method) {
-    this.method = method;
+  MasterOf(final MethodRepresentation methodRepresentation) {
+    this.methodRepresentation = methodRepresentation;
   }
 
-  @Override public final Class<?> toClass() {
-    return this.method.getParameterTypes()[0];
+//  @Override public final boolean isSubtypeOf(final TypeRepresentation typeRepresentation)
+//      throws MethodAmbiguouslyDefinedException {
+//    return new MasterOfMethod(this.methodRepresentation.toMethod()).isSubtypeOf(typeRepresentation);
+//  }
+
+  @Override
+  public final Class<?> toClass() throws
+                                  MethodAmbiguouslyDefinedException {
+    return new MasterOfMethod(this.methodRepresentation.toMethod()).toClass();
   }
 
   @Override public final int hashCode() {
-    return Objects.hash(this.method);
+    return Objects.hash(this.methodRepresentation);
   }
 
   @SuppressWarnings("MethodWithMultipleReturnPoints") @Override
@@ -55,10 +60,11 @@ class GuestOfMethod
     if (this == obj) {
       return true;
     }
-    if (obj == null || this.getClass() != obj.getClass()) {
+    if (obj == null || !this.getClass()
+                            .equals(obj.getClass())) {
       return false;
     }
-    final GuestOfMethod thatObject = (GuestOfMethod) obj;
-    return Objects.equals(this.method, thatObject.method);
+    final MasterOf guestOf = (MasterOf) obj;
+    return Objects.equals(this.methodRepresentation, guestOf.methodRepresentation);
   }
 }

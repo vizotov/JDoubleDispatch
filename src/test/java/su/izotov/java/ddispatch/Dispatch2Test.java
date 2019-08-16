@@ -23,14 +23,12 @@
  */
 package su.izotov.java.ddispatch;
 
-import java.lang.reflect.InvocationTargetException;
 import org.junit.Assert;
 import org.junit.Test;
 import su.izotov.java.ddispatch.guest.impl.OuterImpl;
 import su.izotov.java.ddispatch.guest.impl.Param;
 import su.izotov.java.ddispatch.guest.impl.Param2;
 import su.izotov.java.ddispatch.master.Master;
-import su.izotov.java.ddispatch.methods.MethodAmbiguouslyDefinedException;
 
 /**
  * tests
@@ -43,23 +41,23 @@ public class Dispatch2Test {
     return new ExpectedResult("defaultMethod");
   }
 
-  @Test public final void testParamByInterface()
-      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
+  @Test public final void testParamByInterface() throws
+                                                 MethodAmbiguouslyDefinedException {
     Assert.assertEquals(new ExpectedResult("SuperParam method"),
                         new ExampleDispatch(new Master(), new Param(), Dispatch2Test::defaultMethod)
                             .invoke());
   }
 
-  @Test public final void testParamBySuperInterface()
-      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
+  @Test public final void testParamBySuperInterface() throws
+                                                      MethodAmbiguouslyDefinedException {
     Assert.assertEquals(new ExpectedResult("SecondLevelParamInterface method"),
                         new ExampleDispatch(new Master(),
                                             new Param2(),
                                             Dispatch2Test::defaultMethod).invoke());
   }
 
-  @Test public final void testNoMethods()
-      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
+  @Test public final void testNoMethods() throws
+                                          MethodAmbiguouslyDefinedException {
     Assert.assertEquals(new ExpectedResult("defaultMethod"),
                         new ExampleDispatch(new Master(),
                                             new OuterImpl(),

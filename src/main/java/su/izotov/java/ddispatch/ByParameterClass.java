@@ -25,9 +25,6 @@ package su.izotov.java.ddispatch;
 
 import java.lang.reflect.Method;
 import java.util.Set;
-import su.izotov.java.ddispatch.types.GuestClass;
-import su.izotov.java.ddispatch.types.MasterClass;
-import su.izotov.java.ddispatch.types.ReturnClass;
 
 /**
  * Searching method by the class of parameter

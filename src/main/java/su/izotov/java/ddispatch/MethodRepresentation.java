@@ -21,35 +21,23 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.methods;
+package su.izotov.java.ddispatch;
 
 import java.lang.reflect.Method;
 
 /**
- * There is more than firstMethod method found, and they does not override each other
+ * the representation of method
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-public class MethodAmbiguouslyDefinedException
-    extends Exception {
-
-  private final Method firstMethod;
-  private final Method secondMethod;
-
-  public MethodAmbiguouslyDefinedException(final Method firstMethod,
-                                           final Method secondMethod) {
-    super();
-    this.firstMethod = firstMethod;
-    this.secondMethod = secondMethod;
-  }
-
-  @Override
-  public final String getMessage() {
-    final String message = super.getMessage();
-    return String.format("Ambiguity is found! %s and %s",
-                         new MethodFunction<>(this.firstMethod),
-                         new MethodFunction<>(this.secondMethod));
-  }
+interface MethodRepresentation {
+  /**
+   * Get the method
+   * @return the actual method
+   * @throws MethodAmbiguouslyDefinedException there is more than one method found
+   */
+  Method toMethod()
+      throws MethodAmbiguouslyDefinedException;
 }

@@ -21,44 +21,25 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.methods;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+package su.izotov.java.ddispatch;
 
 /**
+ * Type of the master object
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-public class MethodFunction<M, G, R>
-    implements ResultFunction<M, G, R> {
+public class MasterClassImpl
+    implements MasterClass {
+  private final Class<?> clazz;
 
-  private final Method method;
-
-  public MethodFunction(final Method method) {
-    this.method = method;
+  public MasterClassImpl(final Class<?> clazz) {
+    this.clazz = clazz;
   }
 
   @Override
-  public String toString() {
-    return method.getReturnType()
-                 .getSimpleName() + " " + method.getDeclaringClass()
-                                                .getSimpleName() + "." + method.getName() + "(" + method.getParameterTypes()[0].getSimpleName() + ")";
-  }
-
-  @Override
-  public R apply(final M m,
-                 final G g) {
-    try {
-      //noinspection unchecked
-      return (R) this.method.invoke(m,
-                                    g);
-    } catch (IllegalAccessException e) {
-      throw new IllegalStateException(e);
-    } catch (InvocationTargetException e) {
-      throw new IllegalStateException(e);
-    }
+  public final Class<?> toClass() {
+    return this.clazz;
   }
 }

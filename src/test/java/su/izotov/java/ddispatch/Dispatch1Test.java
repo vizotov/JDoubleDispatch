@@ -23,7 +23,6 @@
  */
 package su.izotov.java.ddispatch;
 
-import java.lang.reflect.InvocationTargetException;
 import org.junit.Assert;
 import org.junit.Test;
 import su.izotov.java.ddispatch.guest.impl.DirectParameterGuest;
@@ -31,7 +30,6 @@ import su.izotov.java.ddispatch.guest.impl.InInterfaceParameterGuest;
 import su.izotov.java.ddispatch.guest.impl.InSecondInterfaceParameterGuest;
 import su.izotov.java.ddispatch.guest.impl.SuperDirectParameterGuest;
 import su.izotov.java.ddispatch.master.Master;
-import su.izotov.java.ddispatch.methods.MethodAmbiguouslyDefinedException;
 
 /**
  * tests
@@ -44,32 +42,32 @@ public class Dispatch1Test {
     return new ExpectedResult("defaultMethod");
   }
 
-  @Test public final void testDirectParameter()
-      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
+  @Test public final void testDirectParameter() throws
+                                                MethodAmbiguouslyDefinedException {
     Assert.assertEquals(new ExpectedResult("Direct method"),
                         new ExampleDispatch(new Master(),
                                             new DirectParameterGuest(),
                                             Dispatch1Test::defaultMethod).invoke());
   }
 
-  @Test public final void testSuperDirectParameter()
-      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
+  @Test public final void testSuperDirectParameter() throws
+                                                     MethodAmbiguouslyDefinedException {
     Assert.assertEquals(new ExpectedResult("SuperDirect method"),
                         new ExampleDispatch(new Master(),
                                             new SuperDirectParameterGuest(),
                                             Dispatch1Test::defaultMethod).invoke());
   }
 
-  @Test public final void testInInterfaceParameter()
-      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
+  @Test public final void testInInterfaceParameter() throws
+                                                     MethodAmbiguouslyDefinedException {
     Assert.assertEquals(new ExpectedResult("InInterface method"),
                         new ExampleDispatch(new Master(),
                                             new InInterfaceParameterGuest(),
                                             Dispatch1Test::defaultMethod).invoke());
   }
 
-  @Test public final void testInSecondInterfaceParameter()
-      throws InvocationTargetException, IllegalAccessException, MethodAmbiguouslyDefinedException {
+  @Test public final void testInSecondInterfaceParameter() throws
+                                                           MethodAmbiguouslyDefinedException {
     Assert.assertEquals(new ExpectedResult("InSecondInterface method"),
                         new ExampleDispatch(new Master(),
                                             new InSecondInterfaceParameterGuest(),

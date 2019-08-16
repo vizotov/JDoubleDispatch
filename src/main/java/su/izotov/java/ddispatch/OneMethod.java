@@ -23,33 +23,24 @@
  */
 package su.izotov.java.ddispatch;
 
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import su.izotov.java.ddispatch.guest.impl.UnrecognizedString;
-import su.izotov.java.ddispatch.master.faces.Lang;
+import java.lang.reflect.Method;
 
 /**
+ * The one method representation
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-public class MasterFaceMethodTest {
-  private RestrictionInterface defaultMethod(
-      final RestrictionInterface master, final RestrictionInterface guest) {
-    return new ExpectedResult("defaultMethod");
+public class OneMethod
+    implements MethodRepresentation {
+  private final Method method;
+
+  public OneMethod(final Method method) {
+    this.method = method;
   }
 
-  @Test public void test() throws
-                           MethodAmbiguouslyDefinedException {
-    RestrictionInterface expResult = new ExpectedResult("InMasterInterface method");
-    RestrictionInterface result = new ExampleDispatch(new MKLang(),
-                                                      new UnrecognizedString(),
-                                                      this::defaultMethod).invoke();
-    assertEquals(expResult, result);
-  }
-
-  private class MKLang
-      implements Lang, RestrictionInterface {
+  @Override public final Method toMethod() {
+    return this.method;
   }
 }

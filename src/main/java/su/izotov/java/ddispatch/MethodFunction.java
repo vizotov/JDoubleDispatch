@@ -21,23 +21,42 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.methods;
+package su.izotov.java.ddispatch;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * the representation of method
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-public interface MethodRepresentation {
-  /**
-   * Get the method
-   * @return the actual method
-   * @throws MethodAmbiguouslyDefinedException there is more than one method found
-   */
-  Method toMethod()
-      throws MethodAmbiguouslyDefinedException;
+public class MethodFunction<M, G, R>
+    implements ResultFunction<M, G, R> {
+
+  private final Method method;
+
+  public MethodFunction(final Method method) {
+    this.method = method;
+  }
+
+  @Override
+  public final String toString() {
+    return this.method.getReturnType()
+                      .getSimpleName() + ' ' + this.method.getDeclaringClass()
+                                                          .getSimpleName() + '.' + this.method.getName() + '(' + this.method.getParameterTypes()[0].getSimpleName() + ')';
+  }
+
+  @Override
+  public final R apply(final M master,
+                       final G guest) {
+    try {
+      //noinspection unchecked
+      return (R) this.method.invoke(master,
+                                    guest);
+    } catch (final IllegalAccessException | InvocationTargetException ex) {
+      throw new IllegalStateException(ex);
+    }
+  }
 }

@@ -23,33 +23,33 @@
  */
 package su.izotov.java.ddispatch;
 
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import su.izotov.java.ddispatch.guest.impl.UnrecognizedString;
-import su.izotov.java.ddispatch.master.faces.Lang;
+import java.lang.reflect.Method;
 
 /**
+ * There is more than firstMethod method found, and they does not override each other
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-public class MasterFaceMethodTest {
-  private RestrictionInterface defaultMethod(
-      final RestrictionInterface master, final RestrictionInterface guest) {
-    return new ExpectedResult("defaultMethod");
+public class MethodAmbiguouslyDefinedException
+    extends Exception {
+
+  private final Method firstMethod;
+  private final Method secondMethod;
+
+  public MethodAmbiguouslyDefinedException(final Method firstMethod,
+                                           final Method secondMethod) {
+    super();
+    this.firstMethod = firstMethod;
+    this.secondMethod = secondMethod;
   }
 
-  @Test public void test() throws
-                           MethodAmbiguouslyDefinedException {
-    RestrictionInterface expResult = new ExpectedResult("InMasterInterface method");
-    RestrictionInterface result = new ExampleDispatch(new MKLang(),
-                                                      new UnrecognizedString(),
-                                                      this::defaultMethod).invoke();
-    assertEquals(expResult, result);
-  }
-
-  private class MKLang
-      implements Lang, RestrictionInterface {
+  @Override
+  public final String getMessage() {
+    final String message = super.getMessage();
+    return String.format("Ambiguity is found! %s and %s",
+                         new MethodFunction<>(this.firstMethod),
+                         new MethodFunction<>(this.secondMethod));
   }
 }

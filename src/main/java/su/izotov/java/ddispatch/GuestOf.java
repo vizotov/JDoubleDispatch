@@ -21,24 +21,50 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.types;
+package su.izotov.java.ddispatch;
+
+import java.util.Objects;
 
 /**
- * Type of the guest object
+ * the guest type of method
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-public class GuestClass
+class GuestOf
     implements TypeRepresentation {
-  private final Class<?> clazz;
+  private final MethodRepresentation methodRepresentation;
 
-  public GuestClass(final Class<?> clazz) {
-    this.clazz = clazz;
+  GuestOf(final MethodRepresentation methodRepresentation) {
+    this.methodRepresentation = methodRepresentation;
   }
 
-  @Override public Class<?> toClass() {
-    return this.clazz;
+//  @Override public final boolean isSubtypeOf(final TypeRepresentation typeRepresentation)
+//      throws MethodAmbiguouslyDefinedException {
+//    return new GuestOfMethod(this.methodRepresentation.toMethod()).isSubtypeOf(typeRepresentation);
+//  }
+
+  @Override
+  public final Class<?> toClass() throws
+                                  MethodAmbiguouslyDefinedException {
+    return new GuestOfMethod(this.methodRepresentation.toMethod()).toClass();
+  }
+
+  @Override public final int hashCode() {
+    return Objects.hash(this.methodRepresentation);
+  }
+
+  @SuppressWarnings("MethodWithMultipleReturnPoints") @Override
+  public final boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || !this.getClass()
+                            .equals(obj.getClass())) {
+      return false;
+    }
+    final GuestOf guestOf = (GuestOf) obj;
+    return Objects.equals(this.methodRepresentation, guestOf.methodRepresentation);
   }
 }

@@ -21,10 +21,9 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.methods;
+package su.izotov.java.ddispatch;
 
 import java.lang.reflect.Method;
-import su.izotov.java.ddispatch.types.TypeRepresentation;
 
 /**
  * Select firstMethod method of secondMethod in accordance with the following algorithm:
@@ -43,38 +42,40 @@ import su.izotov.java.ddispatch.types.TypeRepresentation;
  */
 public class OneOfTwoMethods
     implements MethodRepresentation {
+
   private final MethodRepresentation firstMethod;
   private final MethodRepresentation secondMethod;
 
-  public OneOfTwoMethods(
-      final MethodRepresentation firstMethod, final MethodRepresentation secondMethod) {
+  public OneOfTwoMethods(final MethodRepresentation firstMethod,
+                         final MethodRepresentation secondMethod) {
     this.firstMethod = firstMethod;
     this.secondMethod = secondMethod;
   }
 
-  @Override public final Method toMethod()
-      throws MethodAmbiguouslyDefinedException {
+  @SuppressWarnings("MethodWithMultipleReturnPoints")
+  @Override
+  public final Method toMethod() throws
+                                 MethodAmbiguouslyDefinedException {
     final TypeRepresentation guestOfOne = new GuestOf(this.firstMethod);
     final TypeRepresentation guestOfTwo = new GuestOf(this.secondMethod);
     final TypeRepresentation masterOfOne = new MasterOf(this.firstMethod);
     final TypeRepresentation masterOfTwo = new MasterOf(this.secondMethod);
-    final Method ret;
     if (guestOfOne.isSubtypeOf(guestOfTwo)) {
-      ret = this.firstMethod.toMethod();
-    } else if (guestOfTwo.isSubtypeOf(guestOfOne)) {
-      ret = this.secondMethod.toMethod();
-    } else if (guestOfOne.equals(guestOfTwo)) {
-      if (masterOfOne.isSubtypeOf(masterOfTwo)) {
-        ret = this.firstMethod.toMethod();
-      } else if (masterOfTwo.isSubtypeOf(masterOfOne)) {
-        ret = this.secondMethod.toMethod();
-      } else {
-        ret = this.firstMethod.toMethod(); // never happens
-      }
-    } else {
-      throw new MethodAmbiguouslyDefinedException(this.firstMethod.toMethod(),
-                                                  this.secondMethod.toMethod());
+      return this.firstMethod.toMethod();
     }
-    return ret;
+    if (guestOfTwo.isSubtypeOf(guestOfOne)) {
+      return this.secondMethod.toMethod();
+    }
+    if (guestOfOne.equals(guestOfTwo)) {
+      if (masterOfOne.isSubtypeOf(masterOfTwo)) {
+        return this.firstMethod.toMethod();
+      }
+      if (masterOfTwo.isSubtypeOf(masterOfOne)) {
+        return this.secondMethod.toMethod();
+      }
+      return this.firstMethod.toMethod(); // never happens
+    }
+    throw new MethodAmbiguouslyDefinedException(this.firstMethod.toMethod(),
+                                                this.secondMethod.toMethod());
   }
 }

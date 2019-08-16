@@ -21,26 +21,18 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.methods;
-
-import java.lang.reflect.Method;
+package su.izotov.java.ddispatch;
 
 /**
- * The one method representation
+ * Type of the master object
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-public class OneMethod
-    implements MethodRepresentation {
-  private final Method method;
+public interface MasterClass
+    extends TypeRepresentation {
 
-  public OneMethod(final Method method) {
-    this.method = method;
-  }
-
-  @Override public final Method toMethod() {
-    return this.method;
-  }
+  @Override
+  Class<?> toClass();
 }

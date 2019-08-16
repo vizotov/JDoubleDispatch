@@ -21,19 +21,25 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.methods;
-
-import java.util.function.BiFunction;
+package su.izotov.java.ddispatch;
 
 /**
- * the result function
+ * Type of the return object
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-public interface ResultFunction<M, G, R>
-    extends BiFunction<M, G, R> {
+public class ReturnClassImpl
+    implements ReturnClass {
+  private final Class<?> clazz;
 
-  String toString();
+  public ReturnClassImpl(final Class<?> clazz) {
+    this.clazz = clazz;
+  }
+
+  @Override
+  public final Class<?> toClass() {
+    return this.clazz;
+  }
 }

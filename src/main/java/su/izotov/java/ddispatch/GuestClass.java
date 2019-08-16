@@ -21,44 +21,18 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  */
-package su.izotov.java.ddispatch.methods;
-
-import java.lang.reflect.Method;
-import java.util.Objects;
-import su.izotov.java.ddispatch.types.TypeRepresentation;
+package su.izotov.java.ddispatch;
 
 /**
- * The type of Master object of method
+ * Type of the guest object
  * Created with IntelliJ IDEA.
  * @author Vladimir Izotov
  * @version $Id$
  * @since 1.0
  */
-class MasterOfMethod
-    implements TypeRepresentation {
-  private final Method method;
+public interface GuestClass
+    extends TypeRepresentation {
 
-  MasterOfMethod(final Method method) {
-    this.method = method;
-  }
-
-  @Override public final Class<?> toClass() {
-    return this.method.getDeclaringClass();
-  }
-
-  @Override public final int hashCode() {
-    return Objects.hash(this.method);
-  }
-
-  @SuppressWarnings("MethodWithMultipleReturnPoints") @Override
-  public final boolean equals(final Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || this.getClass() != obj.getClass()) {
-      return false;
-    }
-    final MasterOfMethod thatObject = (MasterOfMethod) obj;
-    return Objects.equals(this.method, thatObject.method);
-  }
+  @Override
+  Class<?> toClass();
 }

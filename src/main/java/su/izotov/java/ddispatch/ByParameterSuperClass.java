@@ -25,9 +25,6 @@ package su.izotov.java.ddispatch;
 
 import java.lang.reflect.Method;
 import java.util.Set;
-import su.izotov.java.ddispatch.types.GuestClass;
-import su.izotov.java.ddispatch.types.MasterClass;
-import su.izotov.java.ddispatch.types.ReturnClass;
 
 /**
  * Searching method by the superclass of parameter
@@ -58,7 +55,8 @@ public class ByParameterSuperClass
   @Override public final Set<Method> findMethods() {
     final Set<Method> methods = this.nextMethodsSource.findMethods();
     if (this.guestClass.toClass().getSuperclass() != null) {
-      final GuestClass guestSuperClass = new GuestClass(this.guestClass.toClass().getSuperclass());
+      final GuestClass guestSuperClass = new GuestClassImpl(this.guestClass.toClass()
+                                                                           .getSuperclass());
       methods.addAll(ByParameterClass.findMethods(this.masterClass,
                                                   guestSuperClass,
                                                   this.methodName,
